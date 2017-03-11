@@ -48,7 +48,7 @@ object movies {
     val model = pipeline.fit(trainingDF)
 
     // Make predictions on test documents.
-    model.transform(testDF)
+    model.transform(testDF).repartition(1)
       .select("file", "prediction")
       .write.format("csv")
       .option("header","true")
