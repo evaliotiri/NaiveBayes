@@ -23,13 +23,13 @@ object movies {
 
 
     // Prepare training documents from a list of (id, text, label) tuples.
-    val neg = spark.sparkContext.textFile("file:///Users/eva/Desktop/Master/TechnologiesforBigDataManagementandAnalytics/MovieReviews_assignment/data/train/neg/").repartition(4)
+    val neg = spark.sparkContext.textFile("file:///MovieReviews_assignment/data/train/neg/").repartition(4)
       .map(w => Sentence(w, 0.0))
 
-    val pos = spark.sparkContext.textFile("file:///Users/eva/Desktop/Master/TechnologiesforBigDataManagementandAnalytics/MovieReviews_assignment/data/train/pos/").repartition(4)
+    val pos = spark.sparkContext.textFile("file///MovieReviews_assignment/data/train/pos/").repartition(4)
       .map(w => Sentence(w, 1.0))
 
-    val test = spark.sparkContext.wholeTextFiles("file:///Users/eva/Desktop/Master/TechnologiesforBigDataManagementandAnalytics/MovieReviews_assignment/data/test/").repartition(4)
+    val test = spark.sparkContext.wholeTextFiles("file:///MovieReviews_assignment/data/test/").repartition(4)
       .map({case(file,sentence) => TrainSentence(file.split("/").last.split("\\.")(0),sentence)})
 
 
@@ -74,8 +74,8 @@ object movies {
     val predictionNB=model.transform(testDF)
 
     val binaryClassificationEvaluator = new BinaryClassificationEvaluator().setLabelCol("label").setRawPredictionCol("rawPrediction")
-  val areaUnderROC=binaryClassificationEvaluator.setMetricName("areaUnderROC").evaluate(evalPredNB)
-  val areaUnderPR = binaryClassificationEvaluator.setMetricName("areaUnderPR").evaluate(evalPredNB)
+    val areaUnderROC=binaryClassificationEvaluator.setMetricName("areaUnderROC").evaluate(evalPredNB)
+    val areaUnderPR = binaryClassificationEvaluator.setMetricName("areaUnderPR").evaluate(evalPredNB)
 
     println("The areaUnderROC is "+areaUnderROC)
     println("The areaUnderPR is "+ areaUnderPR )
@@ -85,7 +85,7 @@ object movies {
       .write.format("csv")
       .option("header","true")
       .option("delimiter","\t")
-      .save("/Users/eva/Desktop/spark-master/NaiveBayes_Evaluation/spark-prediction")
+      .save("/NaiveBayes_Evaluation/spark-prediction")
     spark.stop()
   }
 }
